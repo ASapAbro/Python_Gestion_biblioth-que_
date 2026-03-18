@@ -13,20 +13,20 @@ class Livre:
     def emprunter(self):
         if self.disponible:
             self.disponible = False
-            print("'{self.titre}' emprunté.")
+            print(f"'{self.titre}' emprunté.")
         else:
-            print("'{self.titre}' a déjà été emprunté.")
+            print(f"'{self.titre}' a déjà été emprunté.")
 
     def retourner(self):
         if not self.disponible:
             self.disponible = True
-            print("'{self.titre}' retourné.")
+            print(f"'{self.titre}' retourné.")
         else:
             print(f"'{self.titre}' est déjà disponible.")
 
     def __str__(self):
         dispo = "Disponible" if self.disponible else "Emprunté"
-        return "[{self.id}] {self.titre} — {self.auteur} ({dispo})"
+        return f"[{self.id}] {self.titre} — {self.auteur} ({dispo})"
 
 
 # classe Utilisateur
@@ -53,7 +53,108 @@ class Utilisateur:
 
     def __str__(self):
         if not self.livres_empruntes:
-            return "Utilisateur : {self.nom} — aucun emprunt en cours"
+            return f"Utilisateur : {self.nom} — aucun emprunt en cours"
         titres = ", ".join(l.titre for l in self.livres_empruntes)
-        return "Utilisateur : {self.nom} — Emprunts en cours : {titres}"
+        return f"Utilisateur : {self.nom} — Emprunts en cours : {titres}"
 
+
+
+# classe bibliotheque
+
+class Bibliotheque:
+    def __init__(self, nom):
+        self.nom = nom
+        self.livres = []
+
+    def ajouter (self, livre):
+        self.livres.append(livre)
+        print(f"'{livre.titre}' ajouté à la bibliotheque")
+
+    def supprimer (self, livre_id):
+        for livre in self.livres:
+            if livre.id == livre_id:
+                self.livres.remove(livre)
+                print(f"'{livre.titre}' supprimé.")
+                return
+        print(f" Aucun livre avec l'ID : {livre.id} ")
+
+    def rechercher(self, terme):
+        terme = terme.lower()
+        resultats = [l for l in self.livres
+                     if terme in l.titre.lower()
+                     or terme in l.auteur.lower()]
+        return resultats
+
+    def afficher(self):
+        if not self.livres:
+            print("La bibliotheque est vide")
+            return
+        print(f"\n=== {self.nom} ({len(self.livres)} livres) ===")
+        for livre in self.livres:
+            print(f"  {livre}")
+
+if __name__ == "__main__":
+
+    print("=== Test classe Livre ===\n")
+    l1 = Livre("1984", "Orwell")
+    l2 = Livre("Dune", "Herbert")
+    l3 = Livre("Le Petit Prince", "Saint-Exupéry")
+    l4 = Livre("Dune Messiah", "Herbert")
+    print(l1)
+    print(l2)
+    print(l3)
+    print(l4)
+
+    print("\n=== Test classe Utilisateur ===\n")
+    alice = Utilisateur("Alice")
+    alice.emprunter(l1)
+    alice.emprunter(l2)
+    print(alice)
+    alice.retourner(l1)
+    print(alice)
+
+    print("\n=== Test classe Bibliotheque ===\n")
+
+    bib = Bibliotheque("Ma Bibliothèque")
+
+    # ajouter
+    print("--- Ajout des livres ---")
+    bib.ajouter(l1)
+    bib.ajouter(l2)
+    bib.ajouter(l3)
+    bib.ajouter(l4)
+
+    # afficher
+    print("\n--- Affichage ---")
+    bib.afficher()
+
+    # rechercher par titre
+    print("\n--- Recherche 'dune' ---")
+    resultats = bib.rechercher("dune")
+    if resultats:
+        for l in resultats:
+            print(f"  trouvé : {l}")
+    else:
+        print("  Aucun résultat.")
+
+    # rechercher par auteur
+    print("\n--- Recherche 'herbert' ---")
+    resultats = bib.rechercher("herbert")
+    if resultats:
+        for l in resultats:
+            print(f"  trouvé : {l}")
+
+    # rechercher inexistant
+    print("\n--- Recherche 'tolkien' ---")
+    resultats = bib.rechercher("tolkien")
+    if not resultats:
+        print("  Aucun résultat.")
+
+    # supprimer
+    print("\n--- Suppression ID 2 (Dune) ---")
+    bib.supprimer(2)
+    bib.afficher()
+
+    # supprimer ID inexistant
+    print("\n--- Suppression ID 99 ---")
+    bib.supprimer(99)
