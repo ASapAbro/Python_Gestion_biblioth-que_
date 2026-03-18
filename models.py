@@ -93,3 +93,52 @@ class Bibliotheque:
         for livre in self.livres:
             print(f"  {livre}")
 
+# class livreClassique
+
+class LivreClassique(Livre):
+
+    def __init__(self, titre, auteur, siecle):
+        super().__init__(titre, auteur)
+        self.siecle = siecle
+
+    def __str__(self):
+        base = super().__str__()
+        return base + f" Classique - {self.siecle}'e siecle"
+
+
+#class livreAudio
+
+class LivreAudio(Livre):
+
+    def __init__(self, titre, auteur, duree_minutes):
+        super().__init__(titre, auteur)
+        self.duree_minutes = duree_minutes
+
+    def __str__(self):
+        base = super().__str__()
+        return base + f" Audio - {self.duree_minutes} minutes"
+
+#class bandeDessinee
+
+class BandeDessinee(Livre):
+    def __init__(self, titre, auteur, nb_planches):
+        super().__init__(titre, auteur)
+        self.nb_planches = nb_planches
+
+    def __str__(self):
+        base = super().__str__()
+        return f"{base} | BD — {self.nb_planches} planches"
+
+
+#class ebook
+
+class Ebook(Livre):
+    def __init__(self, titre, auteur, format_fichier):
+        super().__init__(titre, auteur)
+        self.format_fichier = format_fichier
+
+    def __str__(self):
+        base = super().__str__()
+        return f"{base} | Ebook — {self.format_fichier.upper()}"
+
+
